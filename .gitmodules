@@ -1,0 +1,3 @@
+[submodule "Nima-OpenTK"]
+	path = Nima-OpenTK
+	url = https://github.com/2d-inc/Nima-OpenTK
