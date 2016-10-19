@@ -10,6 +10,7 @@ using System.Collections.Generic;
 
 using Nima.OpenGL;
 using Nima.Math2D;
+using Nima;
 
 namespace ConsoleApplication
 {
@@ -41,11 +42,14 @@ namespace ConsoleApplication
 
     public class SimpleES20Window : GameWindow
     {
-        Texture m_Texture;
+        //Texture m_Texture;
 
         Renderer2D m_Renderer;
-        VertexBuffer m_VertexBuffer;
-        IndexBuffer m_IndexBuffer;
+        //VertexBuffer m_VertexBuffer;
+        //IndexBuffer m_IndexBuffer;
+
+        Actor2D m_Actor;
+        ActorInstance2D m_ActorInstance;
 
         public SimpleES20Window(GraphicsContextFlags flags)
             : base(800, 600, GraphicsMode.Default, "GL", GameWindowFlags.Default, DisplayDevice.Default, 2, 0, flags)
@@ -55,6 +59,14 @@ namespace ConsoleApplication
         {
             base.OnLoad(e);
 
+            m_Actor = Actor2D.Load("Assets/Archer.nima");
+            m_ActorInstance = new ActorInstance2D(m_Actor);
+
+            m_Renderer = new Renderer2D();
+            
+            Color4 color = Color4.MidnightBlue;
+            GL.ClearColor(color.R, color.G, color.B, color.A);
+/*
             Color4 color = Color4.MidnightBlue;
             GL.ClearColor(color.R, color.G, color.B, color.A);
             GL.Enable(EnableCap.DepthTest);
@@ -82,7 +94,7 @@ namespace ConsoleApplication
             m_VertexBuffer = new VertexBuffer();
             m_IndexBuffer = new IndexBuffer();
             m_VertexBuffer.SetData(vertexBufferData);
-            m_IndexBuffer.SetData(indexBufferData);
+            m_IndexBuffer.SetData(indexBufferData);*/
         }
 
         protected override void OnResize(EventArgs e)
@@ -93,6 +105,11 @@ namespace ConsoleApplication
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
+            if(m_ActorInstance != null)
+            {
+                m_ActorInstance.Advance((float)e.Time);
+            }
+
             var keyboard = OpenTK.Input.Keyboard.GetState();
             if (keyboard[OpenTK.Input.Key.Escape])
             {
@@ -106,10 +123,15 @@ namespace ConsoleApplication
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             float[] view = Mat2D.Create();
-            float[] transform = Mat2D.Create();
+            if(m_ActorInstance != null)
+            {
+                m_ActorInstance.Draw(view, m_Renderer);
+            }
+           // e.Time
+            /*float[] transform = Mat2D.Create();
             m_Renderer.BlendMode = Renderer2D.BlendModes.Transparent;
             Mat2D.Scale(transform, transform, Vec2D.Create(2048.0f, 256.0f));
-            m_Renderer.DrawTextured(view, transform, m_VertexBuffer, m_IndexBuffer, 1.0f, Color.White, m_Texture);
+            m_Renderer.DrawTextured(view, transform, m_VertexBuffer, m_IndexBuffer, 1.0f, Color.White, m_Texture);*/
             this.SwapBuffers();
         }
     }
