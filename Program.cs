@@ -53,7 +53,8 @@ namespace ConsoleApplication
 
         public SimpleES20Window(GraphicsContextFlags flags)
             : base(800, 600, GraphicsMode.Default, "GL", GameWindowFlags.Default, DisplayDevice.Default, 2, 0, flags)
-        { }
+        { 
+        }
 
         protected override void OnLoad(EventArgs e)
         {
@@ -61,7 +62,7 @@ namespace ConsoleApplication
 
             m_Actor = Actor2D.Load("Assets/Archer.nima");
             m_ActorInstance = new ActorInstance2D(m_Actor);
-
+            m_ActorInstance.Play("Ski", true);
             m_Renderer = new Renderer2D();
             
             Color4 color = Color4.MidnightBlue;
