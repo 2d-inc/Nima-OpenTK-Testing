@@ -57,8 +57,8 @@ namespace ConsoleApplication
         //VertexBuffer m_VertexBuffer;
         //IndexBuffer m_IndexBuffer;
 
-        Actor2D m_Actor;
-        ActorInstance2D m_ActorInstance;
+        GameActor m_GameActor;
+        GameActorInstance m_GameActorInstance;
 
         public SimpleES20Window(GraphicsContextFlags flags)
         : base(800, 600, GraphicsMode.Default, "GL", GameWindowFlags.Default, DisplayDevice.Default, 2, 0, flags)
@@ -69,42 +69,16 @@ namespace ConsoleApplication
         {
             base.OnLoad(e);
 
-            m_Actor = Actor2D.Load("Assets/Archer.nima");
-            m_ActorInstance = new ActorInstance2D(m_Actor);
-            m_ActorInstance.Play("Ski", true);
+            m_GameActor = GameActor.Load("Assets/Archer.nima");
+            //m_GameActor.Play("Ski", true);
             m_Renderer = new Renderer2D();
 
+            m_GameActor.InitializeGraphics(m_Renderer);
+            
+            m_GameActorInstance = m_GameActor.makeInstance();
+            m_GameActorInstance.InitializeGraphics(m_Renderer);
             Color4 color = Color4.MidnightBlue;
             GL.ClearColor(color.R, color.G, color.B, color.A);
-            /*
-                        Color4 color = Color4.MidnightBlue;
-                        GL.ClearColor(color.R, color.G, color.B, color.A);
-                        GL.Enable(EnableCap.DepthTest);
-
-                        m_Renderer = new Renderer2D();
-
-                        m_Texture = new Texture("Assets/Archer0.png", true);
-                        float[] vertexBufferData = {
-                                0.0f, 1.0f,
-                                0.0f, 1.0f,
-
-                                1.0f, 1.0f,
-                                1.0f, 1.0f,
-
-                                1.0f, 0.0f,
-                                1.0f, 0.0f,
-
-                                0.0f, 0.0f,
-                                0.0f, 0.0f
-                            };
-                        ushort[] indexBufferData = {
-                            0, 1, 2, 2, 3, 0
-                        };
-
-                        m_VertexBuffer = new VertexBuffer();
-                        m_IndexBuffer = new IndexBuffer();
-                        m_VertexBuffer.SetData(vertexBufferData);
-                        m_IndexBuffer.SetData(indexBufferData);*/
         }
 
         protected override void OnResize(EventArgs e)
@@ -115,9 +89,9 @@ namespace ConsoleApplication
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            if (m_ActorInstance != null)
+            if (m_GameActorInstance != null)
             {
-                m_ActorInstance.Advance((float)e.Time);
+                m_GameActorInstance.Advance((float)e.Time);
             }
 
             var keyboard = OpenTK.Input.Keyboard.GetState();
@@ -133,9 +107,10 @@ namespace ConsoleApplication
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             float[] view = Mat2D.Create();
-            if (m_ActorInstance != null)
+            m_Renderer.SetView(view);
+            if (m_GameActorInstance != null)
             {
-                m_ActorInstance.Draw(view, m_Renderer);
+                m_GameActorInstance.Render(m_Renderer);
             }
             // e.Time
             /*float[] transform = Mat2D.Create();
