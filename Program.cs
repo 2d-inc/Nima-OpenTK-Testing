@@ -18,16 +18,6 @@ namespace ConsoleApplication
     {
         public static void Main(string[] args)
         {
-            /*Nima.Animation.AnimationCurveTest test = new Nima.Animation.AnimationCurveTest(0, 34.77278518676758,  0.8424242403224804, 29.32800508902757,  0.00000999999999995449, 161.2324085038573,  1, 98.13641357421875);
-            double[] expected = new double[60] {34.77278518676758, 34.68191960114582, 34.626263045220234, 34.60825406058168, 34.630616793905936, 34.69640927316223, 34.80908258233374, 34.97255407429494, 35.19129888214371, 35.470465595669474, 35.81602431382377, 36.23495877318582, 36.73551956101267, 37.32756369914048, 38.023019154232124, 38.836534778601106, 39.78641381941253, 40.89599639959702, 42.195782600806766, 43.72683875969582, 45.54656481224143, 47.7391451822138, 50.436237728268814, 53.863166555806046, 58.46164806479278, 65.31831409552156, 78.36519515402807, 96.74933053662754, 104.50584942069626, 108.5097884695479, 110.98771097769225, 112.62997351481819, 113.73961779039637, 114.4775418713105, 114.93990868784401, 115.18903138882105, 115.26773413400494, 115.20679337895885, 115.02911889353365, 114.75225556329072, 114.38995778094773, 113.95322199445968, 113.45098765217877, 112.89062715646956, 112.27829704435263, 111.61919524907398, 110.91775319639322, 110.17778168580635, 109.4025833537627, 108.59504055052177, 107.75768484454623, 106.89275260388268, 106.00222989070684, 105.08788905743623, 104.15131882996351, 103.19394922884001, 102.2170723627827, 101.2218598927122, 100.2093777906199, 99.18059888389004};
-            double inc = 1.0 / 60.0;
-            for (int i = 0; i < 60; i++)
-            {
-                double _x = i * inc;
-                Console.WriteLine(VAL " + i + " " + _x + " " + test.Get(_x) + " " + (expected[i] - test.Get(_x)));
-            }
-            return;*/
-            Console.WriteLine("Hello World!");
             SimpleES20Window example;
             try
             {
@@ -43,7 +33,7 @@ namespace ConsoleApplication
                 using (example)
                 {
                     //Utilities.SetWindowTitle(example);
-                    example.Run(30.0, 0.0);
+                    example.Run(60.0, 0.0);
                 }
             }
         }
@@ -59,6 +49,8 @@ namespace ConsoleApplication
 
         GameActor m_GameActor;
         GameActorInstance m_GameActorInstance;
+        Nima.Animation.ActorAnimation m_Animation;
+        float m_AnimationTime;
 
         public SimpleES20Window(GraphicsContextFlags flags)
         : base(800, 600, GraphicsMode.Default, "GL", GameWindowFlags.Default, DisplayDevice.Default, 2, 0, flags)
@@ -69,12 +61,13 @@ namespace ConsoleApplication
         {
             base.OnLoad(e);
 
-            m_GameActor = GameActor.Load("Assets/Archer.nima");
-            //m_GameActor.Play("Ski", true);
+            m_GameActor = GameActor.Load("Assets/Pilot/Pilot.nima");
+            m_Animation = m_GameActor.GetAnimation("Untitled");
+            m_AnimationTime = 0.0f;
             m_Renderer = new Renderer2D();
 
             m_GameActor.InitializeGraphics(m_Renderer);
-            
+
             m_GameActorInstance = m_GameActor.makeInstance();
             m_GameActorInstance.InitializeGraphics(m_Renderer);
             Color4 color = Color4.MidnightBlue;
@@ -91,6 +84,8 @@ namespace ConsoleApplication
         {
             if (m_GameActorInstance != null)
             {
+                m_AnimationTime = (m_AnimationTime + (float)e.Time) % m_Animation.Duration;
+                m_Animation.Apply(m_AnimationTime, m_GameActorInstance, 1.0f);
                 m_GameActorInstance.Advance((float)e.Time);
             }
 
@@ -106,7 +101,7 @@ namespace ConsoleApplication
         {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            float[] view = Mat2D.Create();
+            Mat2D view = new Mat2D();
             m_Renderer.SetView(view);
             if (m_GameActorInstance != null)
             {
