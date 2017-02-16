@@ -49,8 +49,7 @@ namespace ConsoleApplication
 
         GameActor m_GameActor;
         GameActorInstance m_GameActorInstance;
-        Nima.Animation.ActorAnimation m_Animation;
-        float m_AnimationTime;
+        Nima.Animation.ActorAnimationInstance m_Animation;
 
         public SimpleES20Window(GraphicsContextFlags flags)
         : base(800, 600, GraphicsMode.Default, "GL", GameWindowFlags.Default, DisplayDevice.Default, 2, 0, flags)
@@ -61,14 +60,19 @@ namespace ConsoleApplication
         {
             base.OnLoad(e);
 
-            m_GameActor = GameActor.Load("Assets/Pilot/Pilot.nima");
-            m_Animation = m_GameActor.GetAnimation("Untitled");
-            m_AnimationTime = 0.0f;
+            m_GameActor = GameActor.Load("Assets/Archer.nima");
             m_Renderer = new Renderer2D();
 
             m_GameActor.InitializeGraphics(m_Renderer);
 
             m_GameActorInstance = m_GameActor.makeInstance();
+            m_Animation = m_GameActorInstance.GetAnimationInstance("Walk");
+            int ct = 0;
+            m_Animation.AnimationEvent += delegate(object animation, Nima.Animation.AnimationEventArgs args)
+            {
+                Console.WriteLine("TRIGGER " + args.Name + " " + ct + " " + m_Animation.Time + " " + args.KeyFrameTime);
+                ct++;
+            };
             m_GameActorInstance.InitializeGraphics(m_Renderer);
             Color4 color = Color4.MidnightBlue;
             GL.ClearColor(color.R, color.G, color.B, color.A);
@@ -84,8 +88,9 @@ namespace ConsoleApplication
         {
             if (m_GameActorInstance != null)
             {
-                m_AnimationTime = (m_AnimationTime + (float)e.Time) % m_Animation.Duration;
-                m_Animation.Apply(m_AnimationTime, m_GameActorInstance, 1.0f);
+                //m_AnimationTime = (m_AnimationTime + (float)e.Time) % m_Animation.Duration;
+                m_Animation.Advance((float)e.Time);
+                m_Animation.Apply(1.0f);
                 m_GameActorInstance.Advance((float)e.Time);
             }
 
