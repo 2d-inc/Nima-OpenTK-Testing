@@ -60,19 +60,19 @@ namespace ConsoleApplication
         {
             base.OnLoad(e);
 
-            m_GameActor = GameActor.Load("Assets/Archer.nima");
+            m_GameActor = GameActor.Load("Assets/SlidingSolo.nima");
             m_Renderer = new Renderer2D();
 
             m_GameActor.InitializeGraphics(m_Renderer);
 
             m_GameActorInstance = m_GameActor.makeInstance();
-            m_Animation = m_GameActorInstance.GetAnimationInstance("Walk");
+            m_Animation = m_GameActorInstance.GetAnimationInstance("Slide");
             int ct = 0;
-            m_Animation.AnimationEvent += delegate(object animation, Nima.Animation.AnimationEventArgs args)
-            {
-                Console.WriteLine("TRIGGER " + args.Name + " " + ct + " " + m_Animation.Time + " " + args.KeyFrameTime);
-                ct++;
-            };
+            // m_Animation.AnimationEvent += delegate(object animation, Nima.Animation.AnimationEventArgs args)
+            // {
+            //     Console.WriteLine("TRIGGER " + args.Name + " " + ct + " " + m_Animation.Time + " " + args.KeyFrameTime);
+            //     ct++;
+            // };
             m_GameActorInstance.InitializeGraphics(m_Renderer);
             Color4 color = Color4.MidnightBlue;
             GL.ClearColor(color.R, color.G, color.B, color.A);
