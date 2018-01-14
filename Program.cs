@@ -61,7 +61,8 @@ namespace ConsoleApplication
             base.OnLoad(e);
 
             //m_GameActor = GameActor.Load("Assets/Archer.nima");
-            m_GameActor = GameActor.Load("Assets/Jelly Bow/Jelly Bow.nima");
+            //m_GameActor = GameActor.Load("Assets/Jelly Bow/Jelly Bow.nima");
+            m_GameActor = GameActor.Load("Assets/Transform/Transform.nima");
             m_Renderer = new Renderer2D();
 
             m_GameActor.InitializeGraphics(m_Renderer);
