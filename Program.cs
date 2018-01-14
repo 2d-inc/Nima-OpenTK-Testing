@@ -60,13 +60,15 @@ namespace ConsoleApplication
         {
             base.OnLoad(e);
 
-            m_GameActor = GameActor.Load("Assets/Archer.nima");
+            //m_GameActor = GameActor.Load("Assets/Archer.nima");
+            m_GameActor = GameActor.Load("Assets/Jelly Bow/Jelly Bow.nima");
             m_Renderer = new Renderer2D();
 
             m_GameActor.InitializeGraphics(m_Renderer);
 
             m_GameActorInstance = m_GameActor.makeInstance();
-            m_Animation = m_GameActorInstance.GetAnimationInstance("Walk");
+            //m_Animation = m_GameActorInstance.GetAnimationInstance("Walk");
+            m_Animation = m_GameActorInstance.GetAnimationInstance("Untitled");
             int ct = 0;
             m_Animation.AnimationEvent += delegate(object animation, Nima.Animation.AnimationEventArgs args)
             {
