@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/bin/Debug/netcoreapp1.0/Nima-OpenTK-Testing.dll",
+            "program": "${workspaceFolder}/bin/Debug/netcoreapp2.1/Nima-OpenTK-Testing.dll",
             "args": [],
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
